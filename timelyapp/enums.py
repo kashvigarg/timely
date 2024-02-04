@@ -1,22 +1,22 @@
-from enum import Enum
+from django.db import models
 
-class Behaviour(Enum):
+class Behaviour(models.IntegerChoices):
     LAZY = 1, 'Lazy'
     MODERATELY_LAZY = 2, 'Moderately Lazy'
     MODERATELY_HARDWORKING = 3, 'Moderately Hardworking'
     HARDWORKING = 4, 'Hardworking'
 
-class Difficulty(Enum):
+class Difficulty(models.IntegerChoices):
     HARD = 1, 'Hard'
     MEDIUM = 2, 'Medium'
     EASY = 3, 'Easy'
 
-class Priority(Enum):
+class Priority(models.IntegerChoices):
     HIGH = 1, 'High'
     MEDIUM = 2, 'Medium'
     LOW = 3, 'Low'
 
-class Day(Enum):
+class Day(models.IntegerChoices):
     MONDAY = 1, 'Monday'
     TUESDAY = 2, 'Tuesday'
     WEDNESDAY = 3, 'Wednesday'

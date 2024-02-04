@@ -16,7 +16,8 @@ SECRET_KEY = str(os.getenv('SECURITY_KEY'))
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'timely-qpcg.onrender.com'
+    'timely-qpcg.onrender.com',
+    '127.0.0.1'
 ]
 
 

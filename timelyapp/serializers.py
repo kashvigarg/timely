@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from django.contrib.auth import authenticate, login
 from .models import Schedule, Task, TimeTable, CustomUser
+
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
@@ -13,10 +13,10 @@ class TimeTableSerializer(serializers.ModelSerializer):
 
 class ScheduleSerializer(serializers.ModelSerializer):
     # tasks = TaskSerializer(many=True)
-
     class Meta:
         model = Schedule
-        fields = ['name' ,'duration','starts_on','no_of_tasks', 'longest_sitting_time', 'behaviour']
+        fields = ['user_id', 'name' ,'duration','starts_on', 'longest_sitting_time', 'behaviour']
+
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -27,7 +27,6 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     class Meta:
-        
         fields = ['email','password']
 
     

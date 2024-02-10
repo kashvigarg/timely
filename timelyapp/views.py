@@ -35,13 +35,22 @@ from rest_framework.decorators import api_view, renderer_classes
 
 class TimetableView (APIView):
     def get(self, request, schedule_id, format = None):
-        # format data
-        # schedule->tasks
-        # call function Bard
-        # serialize that data
-        serializer = TimeTableSerializer()
+        
+        schedule = Schedule.objects.filter(user_id = request.user.id ,id = schedule_id).first()
+        schedule_serializer = ScheduleSerializer(schedule)
+        schedule_duration_days = schedule_serializer.data['duration']
+        starts_on = schedule_serializer.data['starts_on']
+        longest_sitting_time_minutes = schedule_serializer.data['longest_sitting_time']
+        user_behaviour = schedule_serializer.data['behaviour']
 
-        if (serializer.is_valid()):
+        all_tasks = Task.objects.filter(schedule_id=schedule_id)
+        task_serializer = TaskSerializer(all_tasks, many=True)
+        tasks = task_serializer.data
+
+        palm_data = get_response (schedule_duration_days, starts_on,  longest_sitting_time_minutes,user_behaviour, tasks)
+        # serializer = TimeTableSerializer(palm_data)
+
+        if (palm_data!=None):
             return Response(
             status=status.HTTP_200_OK,
             data={
@@ -49,7 +58,7 @@ class TimetableView (APIView):
                 "error_message": "",
                 "success_message": f"Timetable fetched successfully.",
                 "data": {
-                    "timetable" : serializer.validated_data
+                    "timetable" : palm_data['timetable']
                 }
             }
         )
@@ -58,7 +67,7 @@ class TimetableView (APIView):
             status=status.HTTP_400_BAD_REQUEST,
             data={
             "error": True,
-            "error_message": serializer.errors,
+            "error_message": "Time table couldn't be generated for given schedule id",
             "success_message": "",
             "data": {}
         }

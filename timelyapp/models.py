@@ -45,6 +45,8 @@ class Task(models.Model):
     difficulty = models.IntegerField(choices=[(choice.value, choice.name) for choice in Difficulty], default=Difficulty.EASY.value)
     priority = models.IntegerField(choices=[(choice.value, choice.name) for choice in Priority], default=Priority.MEDIUM.value)
     no_of_revisions = models.IntegerField(default=0)
+    # estimated_length = minutes 3hr max 
+    # category_color 
 
     def __str__(self):
         return self.name

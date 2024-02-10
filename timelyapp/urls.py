@@ -4,6 +4,7 @@ from .views import (
     # TaskDetailView,
     RegisterView, LoginView,
     ScheduleListCreateView, 
+    TimetableView,
     # ScheduleDetailView,
     # TimeTableListCreateView, TimeTableDetailView
 )
@@ -11,7 +12,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    # path("get_res", views.palm_response, name="palm_response"), 
+    path("get_res", views.palm_response, name="palm_response"), 
     
     # Task URLs
     path('tasks', TaskListCreateView.as_view(), name='task-list-create'),
@@ -26,7 +27,7 @@ urlpatterns = [
     # path('schedules/<int:pk>/', ScheduleDetailView.as_view(), name='schedule-detail'),
 
     # # TimeTable URLs
-    # path('timetables/', TimeTableListCreateView.as_view(), name='timetable-list-create'),
+    path('timetables/<int:schedule_id>', TimetableView.as_view(), name='timetable-list-create'),
     # path('timetables/<int:pk>/', TimeTableDetailView.as_view(), name='timetable-detail'),
 
 ]

@@ -10,7 +10,7 @@ class CustomUser(AbstractBaseUser):
     username = models.CharField(max_length=30, unique=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     objects = CustomUserManager()
 
@@ -26,16 +26,6 @@ class CustomUser(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_superuser
     
-    
-class Task(models.Model):
-    name = models.CharField(max_length=255, default = "")
-    difficulty = models.IntegerField(choices=[(choice.value, choice.name) for choice in Difficulty], default=Difficulty.EASY.value)
-    priority = models.IntegerField(choices=[(choice.value, choice.name) for choice in Priority], default=Priority.MEDIUM.value)
-    no_of_revisions = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.name
-
 
 class Schedule(models.Model):
     user_id = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
@@ -45,11 +35,19 @@ class Schedule(models.Model):
     no_of_tasks = models.IntegerField(default=0)
     longest_sitting_time = models.DurationField(default=timezone.timedelta(hours=2))
     behaviour = models.IntegerField(choices=[(choice.value, choice.name) for choice in Behaviour], default=Behaviour.MODERATELY_HARDWORKING.value)
-    tasks = models.ManyToManyField(Task, blank=True, null=True)
 
     def __str__(self):
         return self.name
     
+class Task(models.Model):
+    schedule_id = models.ForeignKey(Schedule, on_delete = models.CASCADE)
+    name = models.CharField(max_length=255, default = "")
+    difficulty = models.IntegerField(choices=[(choice.value, choice.name) for choice in Difficulty], default=Difficulty.EASY.value)
+    priority = models.IntegerField(choices=[(choice.value, choice.name) for choice in Priority], default=Priority.MEDIUM.value)
+    no_of_revisions = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
 
 class TimeTable(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, default = "", null=True)

@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    # TaskListCreateView, 
+    TaskListCreateView, 
     # TaskDetailView,
     RegisterView, LoginView,
     ScheduleListCreateView, 
@@ -11,17 +11,18 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("get_res", views.palm_response, name="palm_response"), 
-     # Task URLs
-    # path('tasks/', TaskListCreateView.as_view(), name='task-list-create'),
-    # path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
+    # path("get_res", views.palm_response, name="palm_response"), 
+    
+    # Task URLs
+    path('tasks', TaskListCreateView.as_view(), name='task-list-create'),
+    path('tasks/<int:schedule_id>', TaskListCreateView.as_view(), name='task-get'),
 
     # auth 
-    path('register/', RegisterView.as_view(), name = 'register'),
-    path('login/', LoginView.as_view(), name = 'login'),
+    path('register', RegisterView.as_view(), name = 'register'),
+    path('login', LoginView.as_view(), name = 'login'),
     
     # # Schedule URLs
-    path('schedules/', ScheduleListCreateView.as_view(), name='schedule-list-create'),
+    path('schedules', ScheduleListCreateView.as_view(), name='schedule-list-create'),
     # path('schedules/<int:pk>/', ScheduleDetailView.as_view(), name='schedule-detail'),
 
     # # TimeTable URLs

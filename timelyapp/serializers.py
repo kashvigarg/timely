@@ -6,6 +6,12 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = '__all__'
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['task_id'] = instance.id
+        
+        return representation
 
 class TimeTableSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,8 +19,6 @@ class TimeTableSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ScheduleSerializer(serializers.ModelSerializer):
-    # tasks = TaskSerializer(many=True)
-
     class Meta:
         model = Schedule
         fields = ['user_id', 'name' ,'duration','starts_on', 'longest_sitting_time', 'behaviour']

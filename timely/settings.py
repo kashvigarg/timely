@@ -17,7 +17,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'timely-qpcg.onrender.com',
-    '127.0.0.1'
+    # '127.0.0.1'
 ]
 
 

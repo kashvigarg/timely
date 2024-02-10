@@ -13,7 +13,7 @@ PALM_API_KEY= str(os.getenv('PALM_API_KEY'))
 SECRET_KEY = str(os.getenv('SECURITY_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'timely-qpcg.onrender.com',

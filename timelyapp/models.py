@@ -36,7 +36,7 @@ class Schedule(models.Model):
     longest_sitting_time = models.DurationField(default=timezone.timedelta(hours=2))
     behaviour = models.IntegerField(choices=[(choice.value, choice.name) for choice in Behaviour], default=Behaviour.MODERATELY_HARDWORKING.value)
     has_timetable = models.BooleanField(default=False)
-    schedule_color = models.CharField(max_length=255, default="#9292F0FE")
+    schedule_color = models.CharField(max_length=255, default="#9292F0")
 
     def __str__(self):
         return f"{self.name} , has_timetable = {self.has_timetable}"

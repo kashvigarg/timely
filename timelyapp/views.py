@@ -36,14 +36,17 @@ from rest_framework.decorators import api_view, renderer_classes
 class TimetableView (APIView):
     def get(self, request, schedule_id, format = None):
         
-        schedule = Schedule.objects.filter(user_id = request.user.id ,id = schedule_id).first()
+        schedule = Schedule.objects.filter(user_id = request.user.id , id = schedule_id).first()
         schedule_serializer = ScheduleSerializer(schedule)
+        schedule.has_timetable = True
+        schedule.save()
         schedule_duration_days = schedule_serializer.data['duration']
         starts_on = schedule_serializer.data['starts_on']
         longest_sitting_time_minutes = schedule_serializer.data['longest_sitting_time']
         user_behaviour = schedule_serializer.data['behaviour']
 
         all_tasks = Task.objects.filter(schedule_id=schedule_id)
+        
         task_serializer = TaskSerializer(all_tasks, many=True)
         tasks = task_serializer.data
 
@@ -58,7 +61,8 @@ class TimetableView (APIView):
                 "error_message": "",
                 "success_message": f"Timetable fetched successfully.",
                 "data": {
-                    "timetable" : palm_data['timetable']
+                    "timetable" : palm_data['timetable'],
+                    "timetable_color" : schedule.schedule_color
                 }
             }
         )
@@ -164,7 +168,7 @@ class ScheduleListCreateView(LoginRequiredMixin, APIView):
             serializer = ScheduleSerializer(data=request.data)
             if serializer.is_valid():
                 user_id = request.user.id
-                print(user_id,"HU")
+                
                 user = get_user_model().objects.get(id=user_id)
                 if not user:
                     raise PermissionDenied("User doesn't exist")

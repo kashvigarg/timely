@@ -35,9 +35,11 @@ class Schedule(models.Model):
     no_of_tasks = models.IntegerField(default=0)
     longest_sitting_time = models.DurationField(default=timezone.timedelta(hours=2))
     behaviour = models.IntegerField(choices=[(choice.value, choice.name) for choice in Behaviour], default=Behaviour.MODERATELY_HARDWORKING.value)
+    has_timetable = models.BooleanField(default=False)
+    schedule_color = models.CharField(max_length=255, default="#9292F0FE")
 
     def __str__(self):
-        return self.name
+        return f"{self.name} , has_timetable = {self.has_timetable}"
     
 class Task(models.Model):
     schedule_id = models.ForeignKey(Schedule, on_delete = models.CASCADE)
@@ -45,8 +47,7 @@ class Task(models.Model):
     difficulty = models.IntegerField(choices=[(choice.value, choice.name) for choice in Difficulty], default=Difficulty.EASY.value)
     priority = models.IntegerField(choices=[(choice.value, choice.name) for choice in Priority], default=Priority.MEDIUM.value)
     no_of_revisions = models.IntegerField(default=0)
-    # estimated_length = minutes 3hr max 
-    # category_color 
+    estimated_length = models.DurationField(default=timezone.timedelta)
 
     def __str__(self):
         return self.name
@@ -56,7 +57,8 @@ class TimeTable(models.Model):
     day = models.IntegerField(choices=[(choice.value, choice.name) for choice in Day], default=Day.MONDAY.value)
     start_time = models.TimeField(default = timezone.now)
     end_time = models.TimeField(default = timezone.now)
-
+    timetable_color = models.CharField(max_length=255, default="")
+    
     def __str__(self):
         return f"{self.task.name} - {self.get_day_display()} - {self.start_time} to {self.end_time}"
     

@@ -167,7 +167,7 @@ class ScheduleListCreateView(APIView):
             
             serializer = ScheduleSerializer(data=request.data)
             if serializer.is_valid():
-                user_id = serializer.validated_data['user_id']
+                user_id = request.user.id
                 
                 user = get_user_model().objects.get(id=user_id)
                 if not user:

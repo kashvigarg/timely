@@ -17,14 +17,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from . import utils
 
-def index(request):
-    return HttpResponse("Hello, world. You're at app index.")
-
-def palm_response(request):
-    response = get_response(prompt='Hello, who are you?')
-    return HttpResponse(json.dumps(response), content_type = 'application/json')
-
-# views.py
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -33,18 +25,32 @@ from .models import Task, Schedule, TimeTable, CustomUser
 from .serializers import TaskSerializer, ScheduleSerializer, TimeTableSerializer
 from rest_framework.decorators import api_view, renderer_classes
 
+class TestHitView(APIView):
+    def get(self, request, format= None):
+        return Response(
+            status=status.HTTP_200_OK,
+            data={
+                "error": False,
+                "error_message": "",
+                "success_message": "API test successful.",
+                "data": {
+                    
+                }
+            }
+           )
+    
 
 class GetIdView(APIView):
     def get(self, request, format=None):
-       username = request.data['username']
-       user = CustomUser.objects.filter(username=username)
+       email = request.data['email']
+       user = CustomUser.objects.filter(email=email)
        
        if not user:
            return Response(
             status=status.HTTP_404_NOT_FOUND,
             data={
                 "error": True,
-                "error_message": f"User with username {username} doesn't exist.",
+                "error_message": f"User with email {email} doesn't exist.",
                 "success_message": "",
                 "data": {
                     
@@ -57,9 +63,11 @@ class GetIdView(APIView):
             data={
                 "error": False,
                 "error_message": "",
-                "success_message": f"User with username {username} fetched successfully.",
+                "success_message": f"User with email {email} fetched successfully.",
                 "data": {
-                    "user_id": user.values_list('id', flat=True)[0]
+                    "user_id": user.values_list('id', flat=True)[0],
+                    "email" : user.values_list( 'email' , flat=True)[0],
+                    "username" : user.values_list( 'username', flat=True)[0]
                 }
             }
            )

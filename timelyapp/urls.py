@@ -6,14 +6,15 @@ from .views import (
     RegisterView, LoginView,
     ScheduleListCreateView, 
     TimetableView,
+    TestHitView,
     # ScheduleDetailView,
     # TimeTableListCreateView, TimeTableDetailView
 )
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("get_res", views.palm_response, name="palm_response"), 
+    # Hit Test URLS 
+    path('testhit', TestHitView.as_view(), name='test-hit'),
     
     # Task URLs
     path('tasks', TaskListCreateView.as_view(), name='task-list-create'),
@@ -22,7 +23,7 @@ urlpatterns = [
     # auth 
     path('register', RegisterView.as_view(), name = 'register'),
     path('login', LoginView.as_view(), name = 'login'),
-    path('getidbyusername', GetIdView.as_view(), name='id-by-username'),
+    path('getuserbyemail', GetIdView.as_view(), name='id-by-username'),
     
     # # Schedule URLs
     path('schedules', ScheduleListCreateView.as_view(), name='schedule-list-create'),

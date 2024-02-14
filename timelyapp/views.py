@@ -136,11 +136,11 @@ class TaskListCreateView(APIView):
     )
 
 
-class ScheduleListCreateView(LoginRequiredMixin, APIView):
+class ScheduleListCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, format=None):
-        schedules = Schedule.objects.filter(user_id=request.user.id)
+    def get(self, request, user_id, format=None):
+        schedules = Schedule.objects.filter(user_id=user_id)
         serializer = ScheduleSerializer(schedules, many=True)
         if not serializer.data:
             return Response(
@@ -167,7 +167,7 @@ class ScheduleListCreateView(LoginRequiredMixin, APIView):
             
             serializer = ScheduleSerializer(data=request.data)
             if serializer.is_valid():
-                user_id = request.user.id
+                user_id = serializer.validated_data['user_id']
                 
                 user = get_user_model().objects.get(id=user_id)
                 if not user:
@@ -201,8 +201,8 @@ class ScheduleListCreateView(LoginRequiredMixin, APIView):
             )
         
         
-        else :
-            return Response(
+        
+        return Response(
         status=status.HTTP_400_BAD_REQUEST,
         data={
             "error": True,
@@ -305,3 +305,6 @@ class LoginView(APIView):
                 "data": {}
             }
         )
+    
+
+# timetable time alter tasks, 

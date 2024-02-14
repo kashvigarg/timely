@@ -24,10 +24,10 @@ urlpatterns = [
     
     # # Schedule URLs
     path('schedules', ScheduleListCreateView.as_view(), name='schedule-list-create'),
-    # path('schedules/<int:pk>/', ScheduleDetailView.as_view(), name='schedule-detail'),
+    path('schedules/<int:user_id>', ScheduleListCreateView.as_view(), name='schedule-detail'),
 
     # # TimeTable URLs
-    path('timetables/<int:schedule_id>', TimetableView.as_view(), name='timetable-list-create'),
+    # path('timetables/<int:schedule_id>', TimetableView.as_view(), name='timetable-list-create'),
     # path('timetables/<int:pk>/', TimeTableDetailView.as_view(), name='timetable-detail'),
 
 ]

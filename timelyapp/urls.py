@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     TaskListCreateView, 
     # TaskDetailView,
+    GetIdView,
     RegisterView, LoginView,
     ScheduleListCreateView, 
     TimetableView,
@@ -21,6 +22,7 @@ urlpatterns = [
     # auth 
     path('register', RegisterView.as_view(), name = 'register'),
     path('login', LoginView.as_view(), name = 'login'),
+    path('getidbyusername', GetIdView.as_view(), name='id-by-username'),
     
     # # Schedule URLs
     path('schedules', ScheduleListCreateView.as_view(), name='schedule-list-create'),

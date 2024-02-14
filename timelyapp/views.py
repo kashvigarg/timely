@@ -29,9 +29,41 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Task, Schedule, TimeTable
+from .models import Task, Schedule, TimeTable, CustomUser
 from .serializers import TaskSerializer, ScheduleSerializer, TimeTableSerializer
 from rest_framework.decorators import api_view, renderer_classes
+
+
+class GetIdView(APIView):
+    def get(self, request, format=None):
+       username = request.data['username']
+       user = CustomUser.objects.filter(username=username)
+       
+       if not user:
+           return Response(
+            status=status.HTTP_404_NOT_FOUND,
+            data={
+                "error": True,
+                "error_message": f"User with username {username} doesn't exist.",
+                "success_message": "",
+                "data": {
+                    
+                }
+            }
+           )
+       else:
+           return Response(
+            status=status.HTTP_200_OK,
+            data={
+                "error": False,
+                "error_message": "",
+                "success_message": f"User with username {username} fetched successfully.",
+                "data": {
+                    "user_id": user.values_list('id', flat=True)[0]
+                }
+            }
+           )
+
 
 class TimetableView (APIView):
     def get(self, request, schedule_id, format = None):

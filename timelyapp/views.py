@@ -69,7 +69,7 @@ class GetIdView(APIView):
                 "data": {
                     "user_id": user.values_list('id', flat=True)[0],
                     "email" : email,
-                    "username" : user.values('username')[0]['username']
+                    "username" : user.values_list('username', flat=True)[0]
                 }
             }
            )

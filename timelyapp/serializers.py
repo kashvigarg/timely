@@ -2,6 +2,11 @@ from rest_framework import serializers
 
 from .models import Schedule, Task, TimeTable, CustomUser, Day, TimeSlab
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['email']
+        
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task

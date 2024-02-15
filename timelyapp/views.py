@@ -44,7 +44,7 @@ class TestHitView(APIView):
 class GetIdView(APIView):
     def post(self, request, format=None):
        email = request.data['email']
-       user = CustomUser.objects.filter(email=email)
+       user = CustomUser.objects.filter(email=email).get()
        
        if not user:
            return Response(
@@ -67,9 +67,9 @@ class GetIdView(APIView):
                 "error_message": "",
                 "success_message": f"User with email {email} fetched successfully.",
                 "data": {
-                    "user_id": user.values_list('id', flat=True)[0],
+                    "user_id": user.id,
                     "email" : email,
-                    "username" : user.values_list('username', flat=True)[0]
+                    "username" : user.username
                 }
             }
            )

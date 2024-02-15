@@ -59,6 +59,7 @@ class GetIdView(APIView):
             }
            )
        else:
+           
            return Response(
             status=status.HTTP_200_OK,
             data={
@@ -67,8 +68,8 @@ class GetIdView(APIView):
                 "success_message": f"User with email {email} fetched successfully.",
                 "data": {
                     "user_id": user.values_list('id', flat=True)[0],
-                    "email" : user.values_list( 'email' , flat=True)[0],
-                    "username" : user.values_list( 'username', flat=True)[0]
+                    "email" : email,
+                    "username" : user.values('username')[0]['username']
                 }
             }
            )

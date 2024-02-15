@@ -44,7 +44,7 @@ class TestHitView(APIView):
 class GetIdView(APIView):
     def post(self, request, format=None):
        serializer = UserSerializer(request.data)
-       email = serializer.data.get('email')
+       email = serializer.data['email']
       
        user = CustomUser.objects.filter(email=email).get()
        

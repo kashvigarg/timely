@@ -6,7 +6,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['email']
-        
+
+class EmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task

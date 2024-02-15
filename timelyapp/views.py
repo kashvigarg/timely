@@ -12,7 +12,7 @@ from django.contrib.auth.models import auth
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from .serializers import RegisterSerializer, LoginSerializer, EmailSerializer
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -43,8 +43,10 @@ class TestHitView(APIView):
 
 class GetIdView(APIView):
     def post(self, request, format=None):
-       serializer = UserSerializer(request.data)
+       serializer = EmailSerializer(request.data)
+       
        email = serializer.data['email']
+       print(serializer.data['email'])
       
        user = CustomUser.objects.filter(email=email).get()
        

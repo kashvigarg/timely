@@ -3,6 +3,7 @@ from .google_palm import get_response
 from django.views import View
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 import json
+from datetime import datetime
 from django.core.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,7 +22,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Task, Schedule, TimeTable, CustomUser
+from .models import Task, Schedule, TimeTable, CustomUser, TimeSlab, Day
 from .serializers import TaskSerializer, ScheduleSerializer, TimeTableSerializer
 from rest_framework.decorators import api_view, renderer_classes
 
@@ -41,7 +42,7 @@ class TestHitView(APIView):
     
 
 class GetIdView(APIView):
-    def get(self, request, format=None):
+    def post(self, request, format=None):
        email = request.data['email']
        user = CustomUser.objects.filter(email=email)
        
@@ -74,8 +75,39 @@ class GetIdView(APIView):
 
 
 class TimetableView (APIView):
+    def create_timetable_from_response(self, timetable_data):
+        timetable = TimeTable.objects.create()
+
+        for day_name, day_data in timetable_data['days'].items():
+            date_str = day_data['date']
+            date_obj = datetime.strptime(date_str, "%m/%d/%Y")
+            
+            day = Day.objects.create(date=date_obj)
+            timetable.days.add(day)
+
+            for time_slab_data in day_data['time_slabs']:
+                start_time_obj = datetime.strptime(time_slab_data['start_time'], "%I:%M %p").time()
+                end_time_obj = datetime.strptime(time_slab_data['end_time'], "%I:%M %p").time()
+                    
+                time_slab = TimeSlab.objects.create(
+                        start_time=start_time_obj,
+                        end_time=end_time_obj
+                    )
+                day.time_slabs.add(time_slab)
+
+                for task_data in time_slab_data['tasks']:
+                    task_id = task_data['task_id']
+                    try: 
+                        task_instance = get_object_or_404(Task, id=task_id)
+                    except :
+                        continue
+                    time_slab.tasks.add(task_instance)
+
+        return timetable
+
+    
     def get(self, request, schedule_id, format = None):
-        
+        user_id = request.user.id
         schedule = Schedule.objects.filter(user_id = request.user.id , id = schedule_id).first()
         schedule_serializer = ScheduleSerializer(schedule)
         schedule.has_timetable = True
@@ -91,9 +123,17 @@ class TimetableView (APIView):
         tasks = task_serializer.data
 
         palm_data = get_response (schedule_duration_days, starts_on,  longest_sitting_time_minutes,user_behaviour, tasks)
-        # serializer = TimeTableSerializer(palm_data)
+        print(palm_data)
+        # Create the timetable structure in the database
+        timetable = self.create_timetable_from_response(palm_data['timetable'])
 
-        if (palm_data!=None):
+    # Set the user_id and schedule fields
+        timetable['user_id'] = user_id
+        timetable['schedule_id'] = schedule_id
+        tt_serializer = TimeTableSerializer(timetable)
+
+        if (tt_serializer.is_valid()):
+            tt_serializer.save()
             return Response(
             status=status.HTTP_200_OK,
             data={
@@ -101,7 +141,7 @@ class TimetableView (APIView):
                 "error_message": "",
                 "success_message": f"Timetable fetched successfully.",
                 "data": {
-                    "timetable" : palm_data['timetable'],
+                    "timetable" : tt_serializer.data, 
                     "timetable_color" : schedule.schedule_color
                 }
             }

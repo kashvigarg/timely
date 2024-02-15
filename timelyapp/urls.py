@@ -15,7 +15,7 @@ from . import views
 urlpatterns = [
     # Hit Test URLS 
     path('testhit', TestHitView.as_view(), name='test-hit'),
-    
+
     # Task URLs
     path('tasks', TaskListCreateView.as_view(), name='task-list-create'),
     path('tasks/<int:schedule_id>', TaskListCreateView.as_view(), name='task-get'),
@@ -30,7 +30,7 @@ urlpatterns = [
     path('schedules/<int:user_id>', ScheduleListCreateView.as_view(), name='schedule-detail'),
 
     # # TimeTable URLs
-    # path('timetables/<int:schedule_id>', TimetableView.as_view(), name='timetable-list-create'),
+    path('timetables/<int:schedule_id>', TimetableView.as_view(), name='timetable-list-create'),
     # path('timetables/<int:pk>/', TimeTableDetailView.as_view(), name='timetable-detail'),
 
 ]

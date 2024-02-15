@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Schedule, Task, TimeTable, CustomUser
+from .models import Schedule, Task, TimeTable, CustomUser, Day, TimeSlab
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,10 +13,28 @@ class TaskSerializer(serializers.ModelSerializer):
         
         return representation
 
+class TimeSlabSerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(many=True)  # Assuming you have a TaskSerializer
+
+    class Meta:
+        model = TimeSlab
+        fields = '__all__'
+
+
+class DaySerializer(serializers.ModelSerializer):
+    time_slabs = TimeSlabSerializer(many=True)
+
+    class Meta:
+        model = Day
+        fields = '__all__'
+
 class TimeTableSerializer(serializers.ModelSerializer):
+    # Define serializers for related fields
+    days = DaySerializer(many=True)
+
     class Meta:
         model = TimeTable
-        fields = '__all__'
+        fields = ['user_id', 'days', 'schedule_id']
 
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:

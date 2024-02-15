@@ -1,6 +1,7 @@
 import google.generativeai as palm
 from django.conf import settings
 import csv, json
+from .models import Task, TimeSlab, TimeTable, Day
 
 palm.configure(api_key=settings.PALM_API_KEY)
 # Input message
@@ -108,3 +109,5 @@ def get_response(schedule_duration_days, starts_on, longest_sitting_time_minutes
     #         examples.append({"input": input_message, "output": output_message})
 
     # print(examples)
+
+

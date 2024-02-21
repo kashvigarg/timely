@@ -21,37 +21,36 @@ class TaskSerializer(serializers.ModelSerializer):
         
         return representation
 
-class TimeSlabSerializer(serializers.ModelSerializer):
-    tasks = TaskSerializer(many=True)  # Assuming you have a TaskSerializer
+class TimeTableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeTable
+        fields = '__all__'
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['timetable_id'] = instance.id
+        
+        return representation
 
+class TimeSlabSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeSlab
         fields = '__all__'
 
-
-class DaySerializer(serializers.ModelSerializer):
-    time_slabs = TimeSlabSerializer(many=True)
-
-    class Meta:
-        model = Day
-        fields = '__all__'
-
-class TimeTableSerializer(serializers.ModelSerializer):
-    # Define serializers for related fields
-    days = DaySerializer(many=True)
-
-    class Meta:
-        model = TimeTable
-        fields = ['user_id', 'days', 'schedule_id']
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['timeslab_id'] = instance.id
+        
+        return representation
 
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = ['user_id', 'name' ,'duration','starts_on', 'longest_sitting_time', 'behaviour', 'schedule_color']
+        fields = ['user', 'name' ,'duration','starts_on', 'longest_sitting_time', 'behaviour', 'schedule_color']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation.pop('user_id', None)
+        representation.pop('user', None)
         representation['schedule_id'] = instance.id
         representation['has_timetable'] = instance.has_timetable
         

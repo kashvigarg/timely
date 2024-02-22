@@ -103,7 +103,6 @@ def get_response(schedule_duration_days, starts_on, longest_sitting_time_minutes
     ans_list = ans.split('```json')
     ans_f = ans_list[1].split('```')
     res = ans_f[0]
-    print(ans_f[0])
     f= json.loads(res)
     return f
 

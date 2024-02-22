@@ -27,16 +27,17 @@ class TimetableView(APIView):
             task_objs = Task.objects.filter(id = tasks_id)
             
             if task_objs.count() == 0:
-                
                 continue
+
+            
             timeslab_data = {
                 "date": timeslab['date'],
                 "day": timeslab['day'],
                 "start_time": timeslab['start_time'],
                 "end_time": timeslab['end_time'],
                 "timetable": timetable_instance.id,
-                "task": timeslab['task_id'],
-                "task_name": timeslab['task_name'],
+                "task":tasks_id,
+                "task_name": task_objs.first().name,
                 "timeslab_color": schedule_color
             }
 

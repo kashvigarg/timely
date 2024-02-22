@@ -66,6 +66,7 @@ class TimeSlab(models.Model):
     end_time = models.TimeField(default=timezone.now)
     timeslab_color = models.CharField(max_length = 255, default= "#9292F0")
     task = models.ForeignKey(Task, on_delete = models.CASCADE) 
+    task_name = models.CharField(max_length=255, default = "") 
     date = models.DateTimeField(default=timezone.now)
     day = models.CharField(max_length=255, default = "") 
 

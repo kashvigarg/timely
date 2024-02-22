@@ -23,11 +23,11 @@ class TimetableView(APIView):
         all_timeslabs = []
         for timeslab in timeslab_data:
             tasks_id = timeslab['task_id']
-            print(tasks_id, 'h')
+            
             task_objs = Task.objects.filter(id = tasks_id)
-            print(task_objs, 'm')
+            
             if task_objs.count() == 0:
-                print(tasks_id)
+                
                 continue
             timeslab_data = {
                 "date": timeslab['date'],
@@ -78,10 +78,6 @@ class TimetableView(APIView):
         tasks = task_serializer.data
 
         palm_data = get_response(schedule_duration_days, starts_on, longest_sitting_time_minutes, user_behaviour, tasks)
-        print("response")
-        print(tasks)
-        print(palm_data)
-
         result = self.create_timetable_from_response(timeslab_data=palm_data['timeslabs'], schedule_color=schedule.schedule_color, user_id=user_id, schedule_id=schedule_id)
 
         if not result.get("error", False):

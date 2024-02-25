@@ -79,7 +79,9 @@ class TimetableView(APIView):
         tasks = task_serializer.data
 
         palm_data = get_response(schedule_duration_days, starts_on, longest_sitting_time_minutes, user_behaviour, tasks)
+        print(palm_data)
         result = self.create_timetable_from_response(timeslab_data=palm_data['timeslabs'], schedule_color=schedule.schedule_color, user_id=user_id, schedule_id=schedule_id)
+        print(result)
 
         if not result.get("error", False):
             timetable_serializer = result["timetable_serializer"]

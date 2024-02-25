@@ -9,11 +9,12 @@ TEMPLATE_DIR = BASE_DIR/'templates'
 
 PALM_API_KEY= str(os.getenv('PALM_API_KEY'))
 
+OPENAI_API_KEY = str(os.getenv('OPENAI_API_KEY'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECURITY_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'timely-qpcg.onrender.com',

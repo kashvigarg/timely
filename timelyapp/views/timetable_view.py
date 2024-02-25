@@ -1,4 +1,17 @@
 from .imports import *
+from datetime import datetime
+
+def convert_time(input_time):
+    # Parse the input time string
+    input_format = "%Y-%m-%dT%H:%M:%SZ"
+    dt_object = datetime.strptime(input_time, input_format)
+
+    # Convert to the desired format
+    output_format = "%H:%M:%S.%f" if dt_object.microsecond else "%H:%M:%S"
+    output_time = dt_object.strftime(output_format)
+
+    return output_time
+
 
 class TimetableView(APIView):
     def create_timetable_from_response(self, timeslab_data, schedule_color, user_id, schedule_id):
@@ -33,8 +46,8 @@ class TimetableView(APIView):
             timeslab_data = {
                 "date": timeslab['date'],
                 "day": timeslab['day'],
-                "start_time": timeslab['start_time'],
-                "end_time": timeslab['end_time'],
+                "start_time": convert_time(timeslab['start_time']),
+                "end_time": convert_time(timeslab['end_time']),
                 "timetable": timetable_instance.id,
                 "task":tasks_id,
                 "task_name": task_objs.first().name,
@@ -65,7 +78,10 @@ class TimetableView(APIView):
         user_id = request.data['user_id']
         schedule_id = request.data['schedule_id']
 
-        schedule = Schedule.objects.filter(user_id=user_id, id=schedule_id).first()
+        
+        schedule = Schedule.objects.filter(id=schedule_id).first()
+        
+        print(Schedule.objects.filter(id=schedule_id, user_id=user_id))
 
         schedule_serializer = ScheduleSerializer(schedule)
         schedule_duration_days = schedule_serializer.data['duration']
@@ -80,7 +96,7 @@ class TimetableView(APIView):
 
         palm_data = get_response(schedule_duration_days, starts_on, longest_sitting_time_minutes, user_behaviour, tasks)
         print(palm_data)
-        result = self.create_timetable_from_response(timeslab_data=palm_data['timeslabs'], schedule_color=schedule.schedule_color, user_id=user_id, schedule_id=schedule_id)
+        result = self.create_timetable_from_response(timeslab_data=palm_data['schedule'], schedule_color=schedule.schedule_color, user_id=user_id, schedule_id=schedule_id)
         print(result)
 
         if not result.get("error", False):

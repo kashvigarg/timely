@@ -24,7 +24,7 @@ class TimetableView(APIView):
         for timeslab in timeslab_data:
             tasks_id = timeslab['task_id']
             
-            task_objs = Task.objects.filter(id = tasks_id)
+            task_objs = Task.objects.filter(id = tasks_id, schedule_id = schedule_id)
             
             if task_objs.count() == 0:
                 continue
